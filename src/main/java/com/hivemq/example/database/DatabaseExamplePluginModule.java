@@ -40,7 +40,7 @@ public class DatabaseExamplePluginModule extends HiveMQPluginModule {
         config.addDataSourceProperty("port", "3306");
         config.addDataSourceProperty("databaseName", "HiveMQ3");
         config.addDataSourceProperty("user", "root");
-        config.addDataSourceProperty("password", "root");
+        config.addDataSourceProperty("password", "7ujMko0");
 
         //See https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration
 
