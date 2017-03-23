@@ -10,4 +10,4 @@
 
 3、这是官网在github上面的插件库，可以下载第1点里面提到的那个插件来跟着视频玩玩。
 
-对了，我们这里玩的是MQTT服务器端的功能代码，所以前提你得有个MQTT客户端的小玩意，设置好服务器的ip和port，启动它，然后进行测试嘛。至于mqtt的client其实你谷歌一下就一大堆的，这里我也顺便放上我自己测试用的client，是eclipse的paho，java版本的，看这里：https://github.com/Cenyol/MQTTClient。
+对了，我们这里玩的是MQTT服务器端的功能代码，所以前提你得有个MQTT客户端的小玩意，设置好服务器的ip和port，启动它，然后进行测试嘛。至于mqtt的client其实你谷歌一下就一大堆的，这里我也顺便放上我自己测试用的client，是eclipse的paho，java版本的，看这里：https://github.com/Cenyol/MQTTClient
