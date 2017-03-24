@@ -42,7 +42,7 @@ import java.sql.SQLException;
  */
 public class ClientConnect implements OnConnectCallback {
 
-    private static final int CLIENT_STATUS_ACTIVE= 10;
+    private static final int CLIENT_STATUS_ONLINE= 10;
 
     Logger log = LoggerFactory.getLogger(ClientConnect.class);
 
@@ -70,9 +70,6 @@ public class ClientConnect implements OnConnectCallback {
      */
     @Override
     public void onConnect(CONNECT connect, ClientData clientData) throws RefusedConnectionException {
-        log.info("Client {} is connecting", clientData.getClientId());
-
-
         final String username = clientData.getUsername().get();
         final Connection connection = connectionProvider.get();
 
@@ -81,8 +78,8 @@ public class ClientConnect implements OnConnectCallback {
             public void run() {
                 try {
                     final PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
-                    preparedStatement.setInt(1, CLIENT_STATUS_ACTIVE);
                     preparedStatement.setString(2, username);
+                    preparedStatement.setInt(1, CLIENT_STATUS_ONLINE);
 
                     preparedStatement.execute();
                     preparedStatement.close();
