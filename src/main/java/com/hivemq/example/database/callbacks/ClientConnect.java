@@ -22,6 +22,7 @@ import com.hivemq.spi.callback.events.OnConnectCallback;
 import com.hivemq.spi.callback.exception.RefusedConnectionException;
 import com.hivemq.spi.message.CONNECT;
 import com.hivemq.spi.security.ClientData;
+import com.hivemq.spi.services.PluginExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,12 +47,15 @@ public class ClientConnect implements OnConnectCallback {
     Logger log = LoggerFactory.getLogger(ClientConnect.class);
 
     private final Provider<Connection> connectionProvider;
+    private final PluginExecutorService pluginExecutorService;
 
     private static final String SQLStatement = "UPDATE `Users` SET status = ? WHERE username = ?";
 
     @Inject
-    public ClientConnect(final Provider<Connection> connectionProvider) {
+    public ClientConnect(final Provider<Connection> connectionProvider,
+                         final PluginExecutorService pluginExecutorService) {
         this.connectionProvider = connectionProvider;
+        this.pluginExecutorService = pluginExecutorService;
     }
 
     /**
