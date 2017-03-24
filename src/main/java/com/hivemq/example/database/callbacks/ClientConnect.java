@@ -16,6 +16,7 @@
 
 package com.hivemq.example.database.callbacks;
 
+import com.google.inject.Provider;
 import com.hivemq.spi.callback.CallbackPriority;
 import com.hivemq.spi.callback.events.OnConnectCallback;
 import com.hivemq.spi.callback.exception.RefusedConnectionException;
@@ -23,6 +24,11 @@ import com.hivemq.spi.message.CONNECT;
 import com.hivemq.spi.security.ClientData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * This class is an acme of a callback, which is invoked every time a new client is
@@ -35,7 +41,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ClientConnect implements OnConnectCallback {
 
+    private static final int CLIENT_STATUS_ACTIVE= 10;
+
     Logger log = LoggerFactory.getLogger(ClientConnect.class);
+
+    private final Provider<Connection> connectionProvider;
+
+    private static final String SQLStatement = "UPDATE `Users` SET status = ? WHERE username = ?";
+
+    @Inject
+    public ClientConnect(final Provider<Connection> connectionProvider) {
+        this.connectionProvider = connectionProvider;
+    }
 
     /**
      * This is the callback method, which is called by the HiveMQ core, if a client has sent,
@@ -50,6 +67,32 @@ public class ClientConnect implements OnConnectCallback {
     @Override
     public void onConnect(CONNECT connect, ClientData clientData) throws RefusedConnectionException {
         log.info("Client {} is connecting", clientData.getClientId());
+
+
+        final String username = clientData.getUsername().get();
+        final Connection connection = connectionProvider.get();
+
+        pluginExecutorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final PreparedStatement preparedStatement = connection.prepareStatement(SQLStatement);
+                    preparedStatement.setInt(1, CLIENT_STATUS_ACTIVE);
+                    preparedStatement.setString(2, username);
+
+                    preparedStatement.execute();
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    log.error("An error occured while preparing the SQL statement", e);
+                } finally {
+                    try {
+                        connection.close();
+                    } catch (SQLException e) {
+                        log.error("An error occured while giving back a connection to the connection pool");
+                    }
+                }
+            }
+        });
     }
 
     /**

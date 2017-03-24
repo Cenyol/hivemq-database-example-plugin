@@ -4,6 +4,7 @@
 
 package com.hivemq.example.database;
 
+import com.hivemq.example.database.callbacks.ClientConnect;
 import com.hivemq.example.database.callbacks.DBAuthenticationCallback;
 import com.hivemq.example.database.callbacks.PersistMessagesCallback;
 import com.hivemq.example.database.callbacks.ShutdownCallback;
@@ -16,15 +17,18 @@ import javax.inject.Inject;
 public class DatabaseExamplePlugin extends PluginEntryPoint {
 
 
+    private final ClientConnect clientConnect;
     private final PersistMessagesCallback persistMessagesCallback;
     private final ShutdownCallback shutdownCallback;
     private final DBAuthenticationCallback dbAuthenticationCallback;
 
     @Inject
-    public DatabaseExamplePlugin(final PersistMessagesCallback persistMessagesCallback,
+    public DatabaseExamplePlugin(final ClientConnect clientConnect,
+                                 final PersistMessagesCallback persistMessagesCallback,
                                  final ShutdownCallback shutdownCallback,
                                  final DBAuthenticationCallback dbAuthenticationCallback) {
         this.persistMessagesCallback = persistMessagesCallback;
+        this.clientConnect = clientConnect;
         this.shutdownCallback = shutdownCallback;
         this.dbAuthenticationCallback = dbAuthenticationCallback;
     }
@@ -36,6 +40,7 @@ public class DatabaseExamplePlugin extends PluginEntryPoint {
         final CallbackRegistry callbackRegistry = getCallbackRegistry();
 
         callbackRegistry.addCallback(persistMessagesCallback);
+        callbackRegistry.addCallback(clientConnect);
         callbackRegistry.addCallback(shutdownCallback);
         callbackRegistry.addCallback(dbAuthenticationCallback);
 
