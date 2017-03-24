@@ -16,3 +16,5 @@
 简单说下hivemq插件的打包部署过程：开发完功能，使用maven的package生成jar包，然后把这个jar包放到你要运行的HiveMQ的plugins目录下即可。
 
 有什么问题可以在issue里面提，在下知无不言言无不尽。
+
+新发现了个getting started，英文版的：http://www.hivemq.com/docs/plugins/latest/#maven-archetype-chapter

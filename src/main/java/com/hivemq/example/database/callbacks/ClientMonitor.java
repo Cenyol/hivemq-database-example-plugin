@@ -131,6 +131,6 @@ public class ClientMonitor implements OnConnectCallback,OnDisconnectCallback,OnP
 
     @Override
     public void onPingReceived(ClientData clientData) {
-
+        log.info("received Client {} ping package", clientData.getClientId());
     }
 }
